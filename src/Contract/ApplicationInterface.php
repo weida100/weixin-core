@@ -22,8 +22,8 @@ interface ApplicationInterface
     public function getRequest(): RequestInterface;
     public function setRequest(): static;
 
-    public function getClient(): WithAccessTokenClient;
-    public function setClient(): static;
+    public function getClient(): WithAccessTokenClientInterface;
+    public function setClient(WithAccessTokenClientInterface $client): static;
 
     public function getHttpClient(): HttpClientInterface;
     public function setHttpClient(HttpClientInterface $httpClient): static;

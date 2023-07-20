@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Weida\WeixinCore\Contract;
 
-interface RequestInterface
+interface RequestInterface extends ServerRequestInterface
 {
 
 }

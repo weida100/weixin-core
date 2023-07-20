@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace Weida\WeixinCore;
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\SimpleCache\CacheInterface;
 use Weida\WeixinCore\Cache\FileSystemAdapter;
 use Weida\WeixinCore\Cache\RedisAdapter;
@@ -19,12 +21,13 @@ use Weida\WeixinCore\Contract\ConfigInterface;
 use Weida\WeixinCore\Contract\HttpClientInterface;
 use Weida\WeixinCore\Contract\RequestInterface;
 use Weida\WeixinCore\Contract\StdoutLoggerInterface;
+use Weida\WeixinCore\Contract\WithAccessTokenClientInterface;
 
 abstract class AbstractApplication implements ApplicationInterface
 {
     protected ?CacheInterface $cache = null;
     protected ConfigInterface $config;
-    protected ?WithAccessTokenClient $client = null;
+    protected ?WithAccessTokenClientInterface $client = null;
     protected ?HttpClientInterface $httpClient = null;
     protected ?RequestInterface $request = null;
     protected ?AccountInterface $account = null;
@@ -38,13 +41,21 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->config = new Config($config);
     }
 
-    public function getClient(): WithAccessTokenClient
+    public function getClient(): WithAccessTokenClientInterface
     {
-
+        if(empty($this->client)){
+            $this->client = new WithAccessTokenClient(
+                $this->getHttpClient(),
+                $this->getAccessToken()
+            );
+        }
+        return $this->client ;
     }
 
-    public function setClient(): static
+    public function setClient(WithAccessTokenClientInterface $client): static
     {
+        $this->client = $client;
+        return $this;
     }
 
     public function getConfig(): ConfigInterface
@@ -112,21 +123,20 @@ abstract class AbstractApplication implements ApplicationInterface
         return $this;
     }
 
-    public function getRequest(): RequestInterface
+    public function getRequest(): RequestInterface|ServerRequestInterface
     {
-        // TODO: Implement getRequest() method.
+        if(empty($this->request)){
+            $this->request = ServerRequest::fromGlobals();
+        }
+        return $this->request;
     }
 
-    public function setRequest(): static
+    public function setRequest(RequestInterface|ServerRequestInterface $request): static
     {
-        // TODO: Implement setRequest() method.
+        $this->request = $request;
+        return $this;
     }
-
-    public function getResponse(): ResponseInterface
-    {
-        // TODO: Implement getResponse() method.
-    }
-
+    
     public function setLogger(StdoutLoggerInterface $logger): static
     {
         $this->logger = $logger;
