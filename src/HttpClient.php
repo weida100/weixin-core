@@ -88,7 +88,7 @@ class HttpClient extends Client implements HttpClientInterface
     }
 
     protected function retryDecider():callable{
-        return function ( $retries, Request $request, ?Response $response = null, ?RequestException $exception = null) {
+        return function ( $retries, Request $request, ?Response $response = null, $exception = null) {
             // 超过最大重试次数，不再重试
             if ($retries >= $this->maxRetries) {
                 return false;
@@ -111,6 +111,5 @@ class HttpClient extends Client implements HttpClientInterface
             return $this->delay * $this->multiplier;
         };
     }
-
 
 }
