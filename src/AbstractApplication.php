@@ -18,6 +18,7 @@ use Weida\WeixinCore\Contract\AccessTokenInterface;
 use Weida\WeixinCore\Contract\AccountInterface;
 use Weida\WeixinCore\Contract\ApplicationInterface;
 use Weida\WeixinCore\Contract\ConfigInterface;
+use Weida\WeixinCore\Contract\EncryptorInterface;
 use Weida\WeixinCore\Contract\HttpClientInterface;
 use Weida\WeixinCore\Contract\RequestInterface;
 use Weida\WeixinCore\Contract\StdoutLoggerInterface;
@@ -33,6 +34,7 @@ abstract class AbstractApplication implements ApplicationInterface
     protected ?AccountInterface $account = null;
     protected ?AccessTokenInterface $accessToken = null;
     protected ?StdoutLoggerInterface $logger=null;
+    protected ?EncryptorInterface $encryptor = null;
 
     protected string $cacheNamespace="sjm";
 

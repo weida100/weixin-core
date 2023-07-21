@@ -10,7 +10,7 @@ namespace Weida\WeixinCore\Contract;
 
 interface AesInterface
 {
-    public function encrypt(string $data, string $passphrase, int $options = 0, string $iv = ""):string;
-    public function decrypt(string $data, string $passphrase, int $options = 0, string $iv = ""):string;
+    public static function encrypt(string $data, string $cipherAlgo, string $passphrase, int $options = 0, string $iv = ""):string;
+    public static function decrypt(string $data, string $cipherAlgo, string $passphrase, int $options = 0, string $iv = ""):string;
 
 }

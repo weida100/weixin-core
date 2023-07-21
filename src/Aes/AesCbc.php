@@ -25,15 +25,16 @@ class AesCbc implements AesInterface
 
     /**
      * @param string $data
+     * @param string $cipherAlgo
      * @param string $passphrase
      * @param int $options
      * @param string $iv
      * @return string
      * @throws Exception
      */
-    public function encrypt(string $data, string $passphrase, int $options = 0, string $iv = ""): string
+    public static function encrypt(string $data, string $cipherAlgo, string $passphrase, int $options = 0, string $iv = ""): string
     {
-        $cipherText = \openssl_encrypt($data, $this->cipherAlgo, $passphrase, $options, $iv);
+        $cipherText = \openssl_encrypt($data, $cipherAlgo, $passphrase, $options, $iv);
         if (empty($cipherText)) {
             throw new Exception(openssl_error_string());
         }
@@ -42,6 +43,7 @@ class AesCbc implements AesInterface
 
     /**
      * @param string $data
+     * @param string $cipherAlgo
      * @param string $passphrase
      * @param int $options
      * @param string $iv
@@ -49,9 +51,9 @@ class AesCbc implements AesInterface
      * @throws Exception
      * @author Weida
      */
-    public function decrypt(string $data, string $passphrase, int $options = 0, string $iv = ""): string
+    public function decrypt(string $data, string $cipherAlgo, string $passphrase, int $options = 0, string $iv = ""): string
     {
-        $plainText = openssl_decrypt( $data, $this->cipherAlgo, $passphrase, OPENSSL_RAW_DATA, $iv);
+        $plainText = openssl_decrypt( $data, $cipherAlgo, $passphrase, OPENSSL_RAW_DATA, $iv);
         if (empty($plainText)) {
             throw new Exception(openssl_error_string());
         }
