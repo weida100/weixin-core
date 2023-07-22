@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Weida\WeixinCore\Contract;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 interface RequestInterface extends ServerRequestInterface
 {
 
