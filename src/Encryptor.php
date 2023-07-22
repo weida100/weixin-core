@@ -24,6 +24,14 @@ class Encryptor implements EncryptorInterface
         $this->encodingAesKey = base64_decode($encodingAesKey . "=");
     }
 
+    /**
+     * @param string $ciphertext
+     * @param string $msgSignature
+     * @param string $nonce
+     * @param int|string $timestamp
+     * @return string
+     * @throws \Exception
+     */
     public function decrypt(string $ciphertext, string $msgSignature, string $nonce, int|string $timestamp): string
     {
         //提取密文
@@ -62,7 +70,13 @@ class Encryptor implements EncryptorInterface
         return $xmlContent;
     }
 
-    //公众号，有回复消息，则这里要加密后，回复出去
+    /**
+     * 公众号，有回复消息，则这里要加密后，回复出去
+     * @param string $plaintext
+     * @param string $nonce
+     * @param int|string $timestamp
+     * @return string
+     */
     public function encrypt(string $plaintext, string $nonce = '', int|string $timestamp = ''): string
     {
         try {
@@ -102,8 +116,6 @@ class Encryptor implements EncryptorInterface
 
     private function getRandomStr(int $length = 6, string $alphabet = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789'):string
     {
-        //防止协程下，生成有问题，增加随机种子
-        mt_srand();
         if ($length >= strlen($alphabet)) {
             $rate = intval($length / strlen($alphabet)) + 1;
             $alphabet = str_repeat($alphabet, $rate);
