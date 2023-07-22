@@ -61,4 +61,24 @@ class XML
         return $xmlStr;
     }
 
+    /**
+     * @param string $xml
+     * @return array
+     * @author Sgenmi
+     */
+    public static function parse(string $xml): array
+    {
+        if (str_starts_with($xml, '<')) {
+            if(PHP_VERSION_ID<80000){
+                libxml_disable_entity_loader(true);
+            }
+            $xml = json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA));
+        }
+        $arr = json_decode($xml, true);
+        if (empty($arr) || ! is_array($arr)) {
+            throw new \RuntimeException('Failed to decode request contents.');
+        }
+        return $arr;
+    }
+
 }
