@@ -9,18 +9,18 @@ declare(strict_types=1);
 namespace Weida\WeixinCore\Contract;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\SimpleCache\CacheInterface;
-use Weida\WeixinCore\Encoder;
 use Weida\WeixinCore\WithAccessTokenClient;
 
 interface ApplicationInterface
 {
     public function getAccount(): AccountInterface;
-    public function getEncryptor(): Encoder;
+    public function getEncryptor(): EncryptorInterface;
     public function getResponse(): ResponseInterface;
 
-    public function getRequest(): RequestInterface;
-    public function setRequest(): static;
+    public function getRequest(): RequestInterface|ServerRequestInterface;
+    public function setRequest(RequestInterface|ServerRequestInterface $request): static;
 
     public function getClient(): WithAccessTokenClientInterface;
     public function setClient(WithAccessTokenClientInterface $client): static;

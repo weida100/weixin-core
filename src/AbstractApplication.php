@@ -30,7 +30,7 @@ abstract class AbstractApplication implements ApplicationInterface
     protected ConfigInterface $config;
     protected ?WithAccessTokenClientInterface $client = null;
     protected ?HttpClientInterface $httpClient = null;
-    protected ?RequestInterface $request = null;
+    protected RequestInterface|ServerRequestInterface|null $request = null;
     protected ?AccountInterface $account = null;
     protected ?AccessTokenInterface $accessToken = null;
     protected ?StdoutLoggerInterface $logger=null;
@@ -138,7 +138,7 @@ abstract class AbstractApplication implements ApplicationInterface
         $this->request = $request;
         return $this;
     }
-    
+
     public function setLogger(StdoutLoggerInterface $logger): static
     {
         $this->logger = $logger;
