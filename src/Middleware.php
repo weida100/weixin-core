@@ -85,7 +85,7 @@ final class Middleware
         $next = $result = is_callable($result) ? $result : fn (mixed $p): mixed => $result;
         $handlers = array_reverse($this->handlers);
         //todo $msgType
-        $msgType = sprintf('%s:%s',$message['type']);
+        $msgType = Message::getTypeVal($message['MsgType']??'',$message['Event']??'');
         foreach ($handlers as $k=> $v) {
             if(is_string($k)){
                 if($k===$msgType){
