@@ -21,16 +21,21 @@ use Closure;
 
 class Response extends Psr7Response implements ResponseInterface
 {
+
     protected RequestInterface|ServerRequestInterface $request;
     protected ?EncryptorInterface $encryptor=null;
     protected array $params=[];
     protected Middleware $middleware;
-    public function __construct(RequestInterface|ServerRequestInterface $request,?EncryptorInterface $encryptor=null)
+    public function __construct(
+        RequestInterface|ServerRequestInterface $request,
+        ?EncryptorInterface $encryptor=null,
+        string $appType=''
+        )
     {
         $this->request = $request;
         $this->encryptor = $encryptor;
         $this->params = $this->request->getQueryParams();
-        $this->middleware = new Middleware();
+        $this->middleware = new Middleware($appType);
         parent::__construct(200,[],'success');
     }
 
