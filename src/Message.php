@@ -44,7 +44,7 @@ class Message
     /**
      * @param string $msgType
      * @param string $event
-     * @param string $appType officialAccount|openPlatform|work|workOpenPlatform|miniApp
+     * @param string $appType officialAccount|openPlatform|work|workOpenPlatform|miniApp|videoShop
      * @return string|null
      * @author Sgenmi
      */
@@ -53,6 +53,7 @@ class Message
         switch ($appType){
             case 'officialAccount':
             case 'miniApp':
+            case 'videoShop':
                 if($msgType=='event'){
                     $_defined = strtoupper($msgType.'_'.$event);
                 }else{
