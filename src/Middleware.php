@@ -12,8 +12,10 @@ use InvalidArgumentException;
 final class Middleware
 {
     protected array $handlers=[];
-    public function __construct()
+    protected string $appType='';
+    public function __construct(string $appType='')
     {
+        $this->appType=$appType;
     }
 
     public function addHandler(callable|string|array|object $handler,string $msgType=''):void{
@@ -85,7 +87,7 @@ final class Middleware
         $next = $result = is_callable($result) ? $result : fn (mixed $p): mixed => $result;
         $handlers = array_reverse($this->handlers);
         //todo $msgType
-        $msgType = Message::getTypeVal($message['MsgType']??'',$message['Event']??'');
+        $msgType = Message::getTypeVal($message['MsgType']??'',$message['Event']??'',$this->appType);
         foreach ($handlers as $k=> $v) {
             if(is_string($k)){
                 if($k===$msgType){
