@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Weida\WeixinCore;
 
-use GuzzleHttp\ClientTrait;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Weida\WeixinCore\Contract\AccessTokenInterface;
