@@ -26,6 +26,7 @@ use Weida\WeixinCore\Contract\ResponseInterface;
 
 abstract class AbstractApplication implements ApplicationInterface
 {
+    protected string $appType='officialAccount';
     protected ?CacheInterface $cache = null;
     protected ConfigInterface $config;
     protected ?WithAccessTokenClientInterface $client = null;
@@ -247,7 +248,8 @@ abstract class AbstractApplication implements ApplicationInterface
         if(empty($this->response)){
             $this->response = new Response(
                 $this->getRequest(),
-                $this->getEncryptor()
+                $this->getEncryptor(),
+                $this->getAppType()
             );
         }
         $this->getResponseAfter();
@@ -260,6 +262,10 @@ abstract class AbstractApplication implements ApplicationInterface
      */
     public function getServer():ResponseInterface{
         return $this->getResponse();
+    }
+
+    public function getAppType ():string{
+        return $this->appType;
     }
 
     protected function getResponseAfter(){}
