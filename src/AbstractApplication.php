@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Weida\WeixinCore;
 
 use GuzzleHttp\Psr7\ServerRequest;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\SimpleCache\CacheInterface;
 use Weida\WeixinCore\Cache\FileSystemAdapter;
@@ -23,6 +22,7 @@ use Weida\WeixinCore\Contract\HttpClientInterface;
 use Weida\WeixinCore\Contract\RequestInterface;
 use Weida\WeixinCore\Contract\StdoutLoggerInterface;
 use Weida\WeixinCore\Contract\WithAccessTokenClientInterface;
+use Weida\WeixinCore\Contract\ResponseInterface;
 
 abstract class AbstractApplication implements ApplicationInterface
 {
@@ -35,6 +35,7 @@ abstract class AbstractApplication implements ApplicationInterface
     protected ?AccessTokenInterface $accessToken = null;
     protected ?StdoutLoggerInterface $logger=null;
     protected ?EncryptorInterface $encryptor = null;
+    protected ?ResponseInterface $response=null;
 
     protected string $cacheNamespace="sjm";
 
@@ -142,6 +143,7 @@ abstract class AbstractApplication implements ApplicationInterface
     public function setLogger(StdoutLoggerInterface $logger): static
     {
         $this->logger = $logger;
+        return $this;
     }
 
     /**
@@ -202,4 +204,63 @@ abstract class AbstractApplication implements ApplicationInterface
         return $this;
     }
 
+    /**
+     * @return EncryptorInterface
+     * @author Weida
+     */
+    public function getEncryptor(): EncryptorInterface
+    {
+        if(empty($this->encryptor)){
+            $this->encryptor = new Encryptor(
+                $this->getAccount()->getAppId(),
+                $this->getAccount()->getToken(),
+                $this->getAccount()->getAesKey(),
+                $this->getAccount()->getAppId()
+            );
+        }
+        return $this->encryptor;
+    }
+
+    /**
+     * @return AccountInterface
+     * @author Weida
+     */
+    public function getAccount(): AccountInterface
+    {
+        if (!$this->account){
+            $this->account = new Account(
+                $this->config->get('app_id'),
+                $this->config->get('secret'),
+                $this->config->get('token'),
+                $this->config->get('aes_key'),
+            );
+        }
+        return $this->account;
+    }
+
+    /**
+     * @return ResponseInterface
+     * @author Weida
+     */
+    public function getResponse():ResponseInterface
+    {
+        if(empty($this->response)){
+            $this->response = new Response(
+                $this->getRequest(),
+                $this->getEncryptor()
+            );
+        }
+        $this->getResponseAfter();
+        return $this->response;
+    }
+
+    /**
+     * @return ResponseInterface
+     * @author Weida
+     */
+    public function getServer():ResponseInterface{
+        return $this->getResponse();
+    }
+
+    protected function getResponseAfter(){}
 }
