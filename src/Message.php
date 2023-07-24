@@ -36,18 +36,39 @@ class Message
     const EVENT_VIEW = 'view';
     const EVENT_TEMPLATESENDJOBFINISH = 'templatesendjobfinish';
 
+    const OPEN_COMPONENT_VERIFY_TICKET="open_component_verify_ticket";
+    const OPEN_AUTHORIZED='open_authorized';
+    const OPEN_UPDATEAUTHORIZED = 'open_updateauthorized';
+    const OPEN_UNAUTHORIZED = 'open_unauthorized';
 
     /**
      * @param string $msgType
      * @param string $event
+     * @param string $appType officialAccount|openPlatform|work|workOpenPlatform|miniApp
      * @return string|null
      * @author Sgenmi
      */
-    public static function getTypeVal(string $msgType,string $event=''):?string{
-        if($msgType=='event'){
-           $_defined = strtoupper($msgType.'_'.$event);
-        }else{
-            $_defined = strtoupper('type_'.$msgType);
+    public static function getTypeVal(string $msgType,string $event='',string $appType='officialAccount'):?string{
+        $_defined="weida";
+        switch ($appType){
+            case 'officialAccount':
+            case 'miniApp':
+                if($msgType=='event'){
+                    $_defined = strtoupper($msgType.'_'.$event);
+                }else{
+                    $_defined = strtoupper('type_'.$msgType);
+                }
+                break;
+            case 'openPlatform':
+                $_defined = strtoupper('open_'.$msgType);
+                break;
+
+            case 'work':
+                $_defined = strtoupper('work_'.$msgType);
+                break;
+            case 'workOpenPlatform':
+                $_defined = strtoupper('work_open_'.$msgType);
+                break;
         }
         $localConst = 'self::'.$_defined;
         if(!defined($localConst)){
