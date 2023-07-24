@@ -16,13 +16,6 @@ class AesCbc implements AesInterface
     const AES128="aes-128-cbc";
     const AES256="aes-256-cbc";
 
-    private string $cipherAlgo = "";
-    public function __construct(string $cipherMethod)
-    {
-        $this->cipherAlgo = $cipherMethod;
-    }
-
-
     /**
      * @param string $data
      * @param string $cipherAlgo
@@ -51,7 +44,7 @@ class AesCbc implements AesInterface
      * @throws Exception
      * @author Weida
      */
-    public function decrypt(string $data, string $cipherAlgo, string $passphrase, int $options = 0, string $iv = ""): string
+    public static function decrypt(string $data, string $cipherAlgo, string $passphrase, int $options = 0, string $iv = ""): string
     {
         $plainText = openssl_decrypt( $data, $cipherAlgo, $passphrase, OPENSSL_RAW_DATA, $iv);
         if (empty($plainText)) {
