@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 
 namespace Weida\WeixinCore;
-use http\Exception\RuntimeException;
+use RuntimeException;
 use Weida\WeixinCore\Aes\AesCbc;
 use Weida\WeixinCore\Contract\EncryptorInterface;
 
@@ -38,36 +38,33 @@ class Encryptor implements EncryptorInterface
         $array = XML::extract($ciphertext);
         $encrypt = $array['encrypt'];
         if (empty($encrypt)) {
-            throw new \RuntimeException('not fund encrypt');
+            throw new RuntimeException('not fund encrypt');
         }
         //验证安全签名
         $signature = $this->getSHA1($this->token, $timestamp, $nonce, $encrypt);
-        if ($signature != $sMsgSignature) {
-            throw new RuntimeException('Invalid Signature.', self::ERROR_INVALID_SIGNATURE);
+        if ($signature != $msgSignature) {
+            throw new RuntimeException('Invalid Signature.');
         }
-
         $plaintext = AesCbc::decrypt(
-            base64_decode($ciphertext, true) ?: '',
+            base64_decode($encrypt, true) ?: '',
             AesCbc::AES256,
             $this->encodingAesKey,
             OPENSSL_NO_PADDING,
-            substr($this->aesKey, 0, 16)
+            substr($this->encodingAesKey, 0, 16)
         );
         $plaintext = Pkcs7Encoder::decode($plaintext);
-
         //去除16位随机字符串,网络字节序和AppId
         if (strlen($plaintext) < 16){
             throw new RuntimeException('decrpyt exception',-40007);
         }
-        $content = substr($result, 16);
+        $content = substr($plaintext, 16);
         $lenList = unpack("N", substr($content, 0, 4))??[];
         $xmlLen = $lenList[1];
         $fromAppid = substr($content, $xmlLen + 4);
         if ($this->receiveId && trim($fromAppid) !== $this->receiveId) {
             throw new RuntimeException('Invalid appId.', -40005);
         }
-        $xmlContent = substr($content, 4, $xmlLen);
-        return $xmlContent;
+        return substr($content, 4, $xmlLen);
     }
 
     /**
@@ -105,12 +102,14 @@ class Encryptor implements EncryptorInterface
         }catch (\Throwable $e){
 
         }
+        return '';
     }
 
     private function getSHA1(string $token, int|string $timestamp, string $nonce, string $encryptMsg):string
     {
         //排序
-        sort( [$encrypt_msg, $token, $timestamp, $nonce], SORT_STRING);
+        $array = [$encryptMsg, $token, $timestamp, $nonce];
+        sort($array , SORT_STRING);
         return sha1(implode($array));
     }
 
@@ -120,7 +119,7 @@ class Encryptor implements EncryptorInterface
             $rate = intval($length / strlen($alphabet)) + 1;
             $alphabet = str_repeat($alphabet, $rate);
         }
-        return strval(substr(str_shuffle($alphabet), 0, $length));
+        return substr(str_shuffle($alphabet), 0, $length);
     }
 
 }
