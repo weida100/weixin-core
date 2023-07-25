@@ -38,7 +38,7 @@ abstract class AbstractApplication implements ApplicationInterface
     protected ?EncryptorInterface $encryptor = null;
     protected ?ResponseInterface $response=null;
 
-    protected string $cacheNamespace="sjm";
+    protected string $cacheNamespace="weida";
 
     public function __construct(array $config)
     {
@@ -111,7 +111,7 @@ abstract class AbstractApplication implements ApplicationInterface
     public function getHttpClient():HttpClientInterface
     {
         if(empty($this->httpClient)){
-            $this->httpClient =   new HttpClient(['base_uri'=>'https://api.weixin.qq.com/cgi-bin']);
+            $this->httpClient =   new HttpClient(['base_uri'=>'https://api.weixin.qq.com']);
         }
         return $this->httpClient;
     }
