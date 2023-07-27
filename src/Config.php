@@ -26,7 +26,23 @@ class Config implements ConfigInterface
 
     public function get(string $key, mixed $default = ''): mixed
     {
-        return $this->config[$key]??$default;
+        if(!$key){
+            return $this->config;
+        }
+        $keys = explode('.',$key);
+        $val= null;
+        foreach ($keys as $v){
+            if(is_null($val)){
+                $val = $this->config[$v]??'';
+            }else{
+                if(!$val){
+                    return $default;
+                }else{
+                    $val = $val[$v]??'';
+                }
+            }
+        }
+        return $val;
     }
 
     public function has(string $key): bool
