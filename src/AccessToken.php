@@ -76,7 +76,7 @@ class AccessToken implements AccessTokenInterface
      */
     private function refresh():string{
         if($this->isStable){
-            $apiUrl = 'https://api.weixin.qq.com/cgi-bin/stable_token';
+            $apiUrl = '/cgi-bin/stable_token';
             $params=[
                 'json' => [
                     'grant_type' => 'client_credential',
@@ -87,7 +87,7 @@ class AccessToken implements AccessTokenInterface
             ];
             $method = "POST";
         }else{
-            $apiUrl = 'https://api.weixin.qq.com/cgi-bin/token';
+            $apiUrl = '/cgi-bin/token';
             $params = [
                 'query' => [
                     'grant_type' => 'client_credential',
