@@ -111,7 +111,7 @@ abstract class AbstractApplication implements ApplicationInterface
     public function getHttpClient():HttpClientInterface
     {
         if(empty($this->httpClient)){
-            $this->httpClient =   new HttpClient(['base_uri'=>'https://api.weixin.qq.com']);
+            $this->httpClient =   new HttpClient(['base_uri'=>'https://api.weixin.qq.com/']);
         }
         return $this->httpClient;
     }
