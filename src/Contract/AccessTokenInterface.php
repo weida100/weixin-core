@@ -11,6 +11,7 @@ namespace Weida\WeixinCore\Contract;
 interface AccessTokenInterface
 {
     public function getToken(bool $isRefresh=false):string;
+    public function setToken(string $accessToken):static;
     public function expiresTime():int;
     public function getParams():array;
     public function getCacheKey():string;

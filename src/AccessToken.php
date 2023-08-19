@@ -23,6 +23,7 @@ class AccessToken implements AccessTokenInterface
     private ?HttpClientInterface $httpClient=null;
     private bool $isStable=false;
     private string $cacheKey='';
+    private string $accessToken="";
 
     public function __construct(
         string $appId, string $secret, ?CacheInterface $cache=null, ?HttpClientInterface $httpClient=null, bool $isStable=false
@@ -60,6 +61,10 @@ class AccessToken implements AccessTokenInterface
      */
     public function getToken(bool $isRefresh=false): string
     {
+        //强制设置token,自行维护过期
+        if(!empty($this->accessToken)) {
+            return $this->accessToken;
+        }
         if(!$isRefresh){
             $token = $this->cache->get($this->getCacheKey());
             if (!empty($token)) {
@@ -67,6 +72,18 @@ class AccessToken implements AccessTokenInterface
             }
         }
         return $this->refresh();
+    }
+
+    /**
+     * 强制设置
+     * @param string $accessToken
+     * @return $this
+     * @author Weida
+     */
+    public function setToken(string $accessToken): static
+    {
+        $this->accessToken = $accessToken;
+        return $this;
     }
 
     /**
@@ -126,7 +143,7 @@ class AccessToken implements AccessTokenInterface
     public function getParams(): array
     {
         return [
-            'appid'=>$this->appId,
+            'app_id'=>$this->appId,
             'secret'=>$this->secret,
             'cache'=>$this->cache,
             'httpClient'=>$this->httpClient,
