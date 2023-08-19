@@ -18,12 +18,15 @@ class WithAccessTokenClient implements WithAccessTokenClientInterface
     private HttpClient $httpClient;
     private AccessTokenInterface $accessToken;
     private bool $isThrow =false;
+    private string $paramName;
 
-    public function __construct(HttpClient $httpClient,AccessTokenInterface $accessToken,bool $isThrow=false)
+    public function __construct(
+        HttpClient $httpClient,AccessTokenInterface $accessToken,bool $isThrow=false,string $paramName="access_token")
     {
         $this->httpClient = $httpClient;
         $this->accessToken = $accessToken;
         $this->isThrow = $isThrow;
+        $this->paramName = $paramName;
     }
 
     public function get(string $uri, array $options = []): ResponseInterface
@@ -88,12 +91,12 @@ class WithAccessTokenClient implements WithAccessTokenClientInterface
 
     public function request(string $method, string $uri, array $options = []): ResponseInterface
     {
-        $uri = $this->withAccessToken($uri).'access_token='.$this->accessToken->getToken();
+        $uri = $this->withAccessToken($uri);
         return $this->httpClient->request($method,$uri,$options);
     }
 
     public function requestAsync(string $method, string $uri, array $options = []):PromiseInterface{
-        $uri = $this->withAccessToken($uri).'access_token='.$this->accessToken->getToken();
+        $uri = $this->withAccessToken($uri);
         return $this->httpClient->requestAsync($method,$uri,$options);
     }
 
@@ -103,7 +106,7 @@ class WithAccessTokenClient implements WithAccessTokenClientInterface
      * @return string
      */
     private function withAccessToken(string $uri){
-        return  $uri.(str_contains($uri,'?')?'&':"?");
+        return  $uri.(str_contains($uri,'?')?'&':"?").sprintf('%s=%s',$this->paramName,$this->accessToken->getToken());
     }
 
 }
