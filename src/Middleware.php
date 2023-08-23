@@ -33,8 +33,8 @@ final class Middleware
         if(is_callable($handler)){
             return $handler;
         }
-        if (is_string($handler) && class_exists($handler) && method_exists($handler, '__invoke')) {
-            if(method_exists('handler')){
+        if (is_string($handler) && class_exists($handler)) {
+            if(method_exists($handler,'handler')){
                 return [new $handler(),'handler'];
             }
             if(method_exists($handler,'__invoke')){
@@ -72,8 +72,11 @@ final class Middleware
             $obj = $handler;
         }
         if($obj){
+            if(method_exists($obj,$action)){
+                return [$obj,$action];
+            }
+            //防止设置的action不存在。而存在handler
             if(method_exists($obj,'handler')){
-                var_dump(00000000);
                 return [$obj,'handler'];
             }
             if(method_exists($obj,'__invoke')){
