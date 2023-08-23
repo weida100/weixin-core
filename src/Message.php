@@ -23,9 +23,17 @@ class Message
     const TYPE_LOCATION = 'location';
     const TYPE_LINK = 'link';
     /**
+     * 客户消息时 发送图文消息（点击跳转到外链） 图文消息条数限制在1条以内，注意，如果图文数超过1，则将会返回错误码45008。
+     *  被动回复 可以8条
      * @var string 被动回复时图文
      */
     const TYPE_NEWS = 'news'; //
+    //发送图文消息
+    const TYPE_MPNEWSARTICLE = 'mpnewsarticle';
+    //发送菜单消息
+    const TYPE_MSGMENU = 'msgmenu';
+    //发送卡券
+    const TYPE_WXCARD = 'wxcard';
 
     //授受事件类型
     const EVENT_SUBSCRIBE = 'subscribe';
