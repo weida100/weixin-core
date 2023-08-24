@@ -11,5 +11,5 @@ namespace Weida\WeixinCore\Contract;
 interface MessageInterface
 {
     public function setAttributes(array|string $attributes):void;
-    public function geAttributes():array;
+    public function getAttributes():array;
 }
