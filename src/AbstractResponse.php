@@ -9,20 +9,17 @@ declare(strict_types=1);
 
 namespace Weida\WeixinCore;
 
-use GuzzleHttp\Psr7\Response as Psr7Response;
-use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Weida\WeixinCore\Contract\EncryptorInterface;
-use Weida\WeixinCore\Contract\MessageInterface;
 use Weida\WeixinCore\Contract\RequestInterface;
 use Weida\WeixinCore\Contract\ResponseInterface;
 use Weida\WeixinCore\Middleware;
 use Weida\WeixinCore\XML;
 use Closure;
 
-class Response extends Psr7Response implements ResponseInterface
+abstract class AbstractResponse extends Response implements ResponseInterface
 {
-
     protected RequestInterface|ServerRequestInterface $request;
     protected ?EncryptorInterface $encryptor=null;
     protected array $params=[];
@@ -57,7 +54,7 @@ class Response extends Psr7Response implements ResponseInterface
      * @author Sgenmi
      */
     public function addMessageListener(string $msgType,callable|string|array|object $handler):static{
-        $handler = $this->middleware->addHandler($handler,$msgType);
+        $this->middleware->addHandler($handler,$msgType);
         return $this;
     }
 
@@ -68,7 +65,7 @@ class Response extends Psr7Response implements ResponseInterface
      * @author Sgenmi
      */
     public function addEventListener(string $msgType,callable|string|array|object $handler):static{
-        $handler = $this->middleware->addHandler($handler,$msgType);
+        $this->middleware->addHandler($handler,$msgType);
         return $this;
     }
 
@@ -84,7 +81,8 @@ class Response extends Psr7Response implements ResponseInterface
      * @return array|string
      * @author Sgenmi
      */
-    public function getDecryptedMessage():array{
+    public function getDecryptedMessage(): array|string
+    {
         $message = $this->getRequestMessage();
         if (empty($this->encryptor) || empty($this->params['msg_signature'])) {
             return $message;
