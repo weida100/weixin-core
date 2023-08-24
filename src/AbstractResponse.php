@@ -13,6 +13,7 @@ use GuzzleHttp\Psr7\Response as Psr7Response;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Weida\WeixinCore\Contract\EncryptorInterface;
+use Weida\WeixinCore\Contract\MessageInterface;
 use Weida\WeixinCore\Contract\RequestInterface;
 use Weida\WeixinCore\Contract\ResponseInterface;
 use Weida\WeixinCore\Middleware;
@@ -37,21 +38,6 @@ class Response extends Psr7Response implements ResponseInterface
         $this->params = $this->request->getQueryParams();
         $this->middleware = new Middleware($appType);
         parent::__construct(200,[],'success');
-    }
-
-    /**
-     * @return PsrResponseInterface
-     * @author Sgenmi
-     */
-    public function serve():PsrResponseInterface{
-        if (!empty($this->params['echostr'])) {
-            $this->withBody($this->params['echostr']);
-            return $this;
-        }
-        $message = $this->getDecryptedMessage();
-        $response = $this->middleware->handler($this,$message);
-        //todo message类型自动包装
-        return $this;
     }
 
     /**
