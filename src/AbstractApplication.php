@@ -238,24 +238,7 @@ abstract class AbstractApplication implements ApplicationInterface
         }
         return $this->account;
     }
-
-    /**
-     * @return ResponseInterface
-     * @author Weida
-     */
-    public function getResponse():ResponseInterface
-    {
-        if(empty($this->response)){
-            $this->response = new Response(
-                $this->getRequest(),
-                $this->getEncryptor(),
-                $this->getAppType()
-            );
-        }
-        $this->getResponseAfter();
-        return $this->response;
-    }
-
+    
     /**
      * @return ResponseInterface
      * @author Weida
