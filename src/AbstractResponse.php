@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Weida\WeixinCore;
 
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ServerRequestInterface;
 use Weida\WeixinCore\Contract\EncryptorInterface;
 use Weida\WeixinCore\Contract\RequestInterface;
@@ -92,5 +93,16 @@ abstract class AbstractResponse extends Response implements ResponseInterface
         );
         return XML::parse($str);
     }
+
+    /**
+     * @param string $body
+     * @return \Psr\Http\Message\ResponseInterface
+     * @author Weida
+     */
+    protected function sendBody(string $body): \Psr\Http\Message\ResponseInterface
+    {
+        return $this->withBody(\GuzzleHttp\Psr7\Utils::streamFor($body));
+    }
+
 
 }
