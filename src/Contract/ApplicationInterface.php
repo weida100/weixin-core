@@ -17,6 +17,7 @@ interface ApplicationInterface
 {
     public function getAccount(): AccountInterface;
     public function getEncryptor(): EncryptorInterface;
+    public function setEncryptor(EncryptorInterface $encryptor): static;
     public function getResponse(): ResponseInterface;
 
     public function getRequest(): RequestInterface|ServerRequestInterface;

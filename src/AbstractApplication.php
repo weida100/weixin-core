@@ -223,6 +223,17 @@ abstract class AbstractApplication implements ApplicationInterface
     }
 
     /**
+     * @param EncryptorInterface $encryptor
+     * @return $this
+     * @author Weida
+     */
+    public function setEncryptor(EncryptorInterface $encryptor): static
+    {
+        $this->encryptor = $encryptor;
+        return $this;
+    }
+
+    /**
      * @return AccountInterface
      * @author Weida
      */
@@ -238,7 +249,7 @@ abstract class AbstractApplication implements ApplicationInterface
         }
         return $this->account;
     }
-    
+
     /**
      * @return ResponseInterface
      * @author Weida
