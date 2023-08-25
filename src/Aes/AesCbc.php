@@ -46,7 +46,7 @@ class AesCbc implements AesInterface
      */
     public static function decrypt(string $data, string $cipherAlgo, string $passphrase, int $options = 0, string $iv = ""): string
     {
-        $plainText = openssl_decrypt( $data, $cipherAlgo, $passphrase, OPENSSL_RAW_DATA, $iv);
+        $plainText = openssl_decrypt( $data, $cipherAlgo, $passphrase, $options, $iv);
         if (empty($plainText)) {
             throw new Exception(openssl_error_string());
         }
