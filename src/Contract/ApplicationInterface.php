@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Weida\WeixinCore\Contract;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\SimpleCache\CacheInterface;
 use Weida\WeixinCore\WithAccessTokenClient;
