@@ -35,7 +35,6 @@ abstract class AbstractResponse implements ResponseInterface
         $this->encryptor = $encryptor;
         $this->params = $this->request->getQueryParams();
         $this->middleware = new Middleware($appType);
-        parent::__construct(200,[],'success');
     }
 
     /**
