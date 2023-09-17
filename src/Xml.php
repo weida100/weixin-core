@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Weida\WeixinCore;
 
-class XML
+class Xml
 {
 
     /**
