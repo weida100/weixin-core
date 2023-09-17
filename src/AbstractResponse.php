@@ -9,17 +9,17 @@ declare(strict_types=1);
 
 namespace Weida\WeixinCore;
 
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Weida\WeixinCore\Contract\EncryptorInterface;
 use Weida\WeixinCore\Contract\RequestInterface;
 use Weida\WeixinCore\Contract\ResponseInterface;
-use Weida\WeixinCore\Middleware;
-use Weida\WeixinCore\XML;
-use Closure;
+use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
+use Psr\Http\Message\MessageInterface as PsrMessageInterface;
 
-abstract class AbstractResponse extends Response implements ResponseInterface
+
+abstract class AbstractResponse implements ResponseInterface
 {
     protected RequestInterface|ServerRequestInterface $request;
     protected ?EncryptorInterface $encryptor=null;
@@ -91,18 +91,25 @@ abstract class AbstractResponse extends Response implements ResponseInterface
         $str = $this->encryptor->decrypt(
             $message,$this->params['msg_signature'],$this->params['nonce']??'',$this->params['timestamp']??0
         );
-        return XML::parse($str);
+        return Xml::parse($str);
     }
 
     /**
      * @param string $body
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return StreamInterface
      * @author Weida
      */
-    protected function sendBody(string $body): \Psr\Http\Message\ResponseInterface
+    protected function createBody(string $body):StreamInterface
     {
-        return $this->withBody(\GuzzleHttp\Psr7\Utils::streamFor($body));
+        return Utils::streamFor($body);
     }
 
+    /**
+     * @return PsrResponseInterface
+     * @author Weida
+     */
+    public function serve():PsrMessageInterface|PsrResponseInterface{
+        return $this->response();
+    }
 
 }
