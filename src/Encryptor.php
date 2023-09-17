@@ -35,7 +35,7 @@ class Encryptor implements EncryptorInterface
     public function decrypt(string $ciphertext, string $msgSignature, string $nonce, int|string $timestamp): string
     {
         //提取密文
-        $array = XML::extract($ciphertext);
+        $array = Xml::extract($ciphertext);
         $encrypt = $array['encrypt'];
         if (empty($encrypt)) {
             throw new RuntimeException('not fund encrypt');
@@ -98,7 +98,7 @@ class Encryptor implements EncryptorInterface
                 'TimeStamp' => $timestamp,
                 'Nonce' => $nonce,
             ];
-            return XML::generate($response);
+            return Xml::generate($response);
         }catch (\Throwable $e){
 
         }
