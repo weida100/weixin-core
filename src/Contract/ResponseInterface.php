@@ -7,10 +7,13 @@ declare(strict_types=1);
  */
 
 namespace Weida\WeixinCore\Contract;
-use \Psr\Http\Message\ResponseInterface as PsrResponseInterface;
-interface ResponseInterface extends PsrResponseInterface
+use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
+interface ResponseInterface
 {
-    public function serve():PsrResponseInterface;
+    public function response():PsrResponseInterface;
     public function with(callable|string|array|object $callbale):static;
-
+    public function addMessageListener(string $msgType,callable|string|array|object $handler):static;
+    public function addEventListener(string $msgType,callable|string|array|object $handler):static;
+    public function getRequestMessage():string;
+    public function getDecryptedMessage(): array|string;
 }
